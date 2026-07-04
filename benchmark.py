@@ -455,10 +455,20 @@ def export_json(results: List[BenchmarkResult], path: str) -> None:
 # Command-line interface
 # ---------------------------------------------------------------------------
 
-def build_arg_parser() -> argparse.ArgumentParser:
+def build_arg_parser(add_help: bool = True) -> argparse.ArgumentParser:
+    """
+    Build the CLI argument parser.
+
+    ``add_help`` can be set to False so this parser can be reused as a
+    ``parents=[...]`` base for a larger parser (e.g. ``main.py``'s, which
+    adds pipeline-level flags on top of every benchmark flag defined
+    here) without triggering an "-h/--help conflicts" error from having
+    two parsers each try to register their own help flag.
+    """
     parser = argparse.ArgumentParser(
         description="Benchmark modular exponentiation algorithms across a "
-        "grid of exponent sizes and modulus sizes."
+        "grid of exponent sizes and modulus sizes.",
+        add_help=add_help,
     )
     parser.add_argument("--min-exponent-bits", type=int, default=5,
                          help="Smallest exponent bit-length to test (default: 5, i.e. ~2^5).")
